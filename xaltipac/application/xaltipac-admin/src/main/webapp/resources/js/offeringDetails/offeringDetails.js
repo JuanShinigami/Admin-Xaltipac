@@ -34,5 +34,25 @@ function searchOffering(idUser, name, lastName, lastNameMaternal){
 }
 
 function addOfferingDetails(){
-	alert("Estoy listo para guardar");
+	$.ajax({
+		type : "POST",
+		url : $('#edit-offering-details-form').attr('action'),
+		data : ($('#edit-offering-details-form').serialize()),
+		success : function(response) {
+			if(response.isEmpty === false){
+				if(response.isSave === true){
+					//alert("Lo guarde sin problemas");
+					$('#modal-edit-offeringDetails').modal('toggle');
+					
+				}else{
+					alert("Hay un problema para guardar las ofrendas.")
+				}
+			}else{
+				alert("No hay ofrendas a registrar.");
+			}
+		},
+		error : function(e) {
+			// TODO: Action in error stage
+		}
+	});
 }

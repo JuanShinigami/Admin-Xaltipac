@@ -112,8 +112,12 @@
 						<ol class="breadcrumb">
 							<h5 id="titleModalOffering" />
 						</ol>
-						<input id="contentIndices" name="contentIndices" type="hidden" />
-						<div id="contentOffering"></div>
+						<form id="edit-offering-details-form" action=""
+							th:action="@{'/week/offeringDetails/editOfferingDetails'}"
+							method="post">
+							<input id="contentIndices" name="contentIndices" type="hidden" />
+							<div id="contentOffering"></div>
+						</form>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>

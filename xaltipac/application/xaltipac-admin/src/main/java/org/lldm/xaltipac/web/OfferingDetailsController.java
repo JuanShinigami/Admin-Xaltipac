@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,42 +39,40 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @PreAuthorize("hasRole('showOfferingDetails')")
 @RequestMapping(value = "/week/offeringDetails")
 public class OfferingDetailsController {
-	
+
 	private static final Logger LOG = Logger.getLogger(OfferingDetailsController.class);
 
 	@Autowired
 	OfferingDetailService offeringDetailService;
-	
+
 	@Autowired
 	WeekService weekService;
-	
+
 	@Autowired
 	UserDetailsService userDetailsService;
-	
+
 	@Autowired
 	LogUtil logUtil;
-	
+
 	@RequestMapping(value = "/{id}/", method = RequestMethod.POST)
 	public String listOfferingDetails(Model model, @PathVariable Integer id, HttpServletRequest request) {
 
-		
 		logUtil.logHistory(LOG, "/week/offeringDetails/", ActionsEnum.VIEW, request.getRemoteAddr(), "");
-		
+
 		Week week = weekService.findOne(id);
-		
+
 		LOG.debug("Fecha que recibo de la URL. -------------- " + week);
-		
-		
-        model.addAttribute("userList", userDetailsService.getAllUsersActive());
-        model.addAttribute("week", week);
+
+		model.addAttribute("userList", userDetailsService.getAllUsersActive());
+		model.addAttribute("week", week);
 		return "offeringDetails/offeringDetailsList";
 
 	}
-	
+
 	@RequestMapping(value = "/searchOfferingByWeekAndUser", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Map<String, Object> editWeekPost(@RequestParam Map<String, String> requestParams,
 			HttpServletRequest request) {
-		
+
 		Map<String, Object> output = new HashMap<String, Object>();
 		boolean isEmpty = true;
 		Integer idWeek = Integer.parseInt(requestParams.get("idWeek"));
@@ -81,25 +80,56 @@ public class OfferingDetailsController {
 		String indices = "";
 		Week week = weekService.findOne(idWeek);
 		UserDetails ud = userDetailsService.findOne(idUserD);
-		
+
 		List<OfferingDetails> offeringDetails = offeringDetailService.findByUserDetailsAndWeek(ud, week);
-		
-		if(offeringDetails.size() > 0){
+
+		if (offeringDetails.size() > 0) {
 			isEmpty = false;
 			for (OfferingDetails offeringDetails2 : offeringDetails) {
 				indices += offeringDetails2.getId() + ",";
 			}
 		}
-		
-		indices = indices.substring(0, indices.length()-1);
-		
+
+		indices = indices.substring(0, indices.length() - 1);
+
 		LOG.debug("CADENA DE INDICES ------------- " + indices);
 		output.put("isEmpty", isEmpty);
 		output.put("offeringDetails", offeringDetails);
 		output.put("indices", indices);
-		
 
 		return output;
 	}
+
+	@Transactional
+	@RequestMapping(value = "/editOfferingDetails", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Map<String, Object> editOfferingDetails(@RequestParam Map<String, String> requestParams,
+			HttpServletRequest request) {
+		
+		Map<String, Object> output = new HashMap<String, Object>();
+		boolean isSave = false;
+		boolean isEmpty = true;
+		String contentIndices = requestParams.get("contentIndices");
+		
+		String[] offeringDetail = contentIndices.split(",");
+//		for(int x = 0; x<contentIndices.length(); x++){
+//			LOG.debug("ENCONTRE UN INDEX ----------------- " + offeringDetail[x]);
+//		}
+		OfferingDetails offeringD = null;
+		if(offeringDetail.length > 0){
+			
+			isEmpty = false;
+			for(int x = 0; x<offeringDetail.length; x++){
+				offeringD = offeringDetailService.findOne(Integer.parseInt(offeringDetail[x]));
+				offeringD.setQuantity(Double.parseDouble(requestParams.get("offering-"+offeringD.getId())));
+				offeringDetailService.save(offeringD);
+			}
+			isSave = true;
+		}
+		output.put("isEmpty", isEmpty);
+		output.put("isSave", isSave);
+		return output;
+	}
+	
+	
 	
 }

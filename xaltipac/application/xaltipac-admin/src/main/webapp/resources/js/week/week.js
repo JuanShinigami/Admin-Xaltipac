@@ -48,3 +48,7 @@ function registerOfferings(day){
 	//alert("Estoy listo para registrar las ofrendas");
 	$('#register-offering-'+day+'-form').submit();
 }
+
+function showModalCloseWeek(id){
+	alert("Estas seguro que lo vas a eliminar?");
+}

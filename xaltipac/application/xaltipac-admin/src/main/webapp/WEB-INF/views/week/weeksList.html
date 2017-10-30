@@ -75,6 +75,10 @@
 						id="Ingresar ofrendas" title="Registrar ofrendas" class="btn btn-warning"
 						th:onclick="'registerOfferings(\''+${week.day}+'\')'"
 						value="Registrar" />
+						<input type="button"
+						id="Cerra Semana" title="Cerrar Semana" class="btn btn-success"
+						th:onclick="'showModalCloseWeek(\''+${week.day}+'\')'"
+						value="Cerrar Semana" />
 						<div class="modal fade" id="" tabindex="-1" role="dialog"
 							aria-labelledby="myModalLabel" aria-hidden="true"
 							th:attrappend="id='modal-delete-' + ${week.day}">

@@ -17,12 +17,10 @@ import org.lldm.xaltipac.data.model.UserDetails;
  */
 
 public interface OfferingDetailService extends BaseService<OfferingDetails, Integer>{
-	public List<OfferingDetails> findByOffering(Offering offering);
-	public List<OfferingDetails> findByWeek(Week day);
-	public List<OfferingDetails> findByUserDetails(UserDetails userDetails);
-	public List<OfferingDetails> findByUserDetailsAndWeek(UserDetails userDetails, Week week);
-	public List<OfferingDetails> findByOfferingAndWeek(Offering offering, Week day);
+	List<OfferingDetails> findByOffering(Offering offering);
+	List<OfferingDetails> findByWeek(Week day);
+	List<OfferingDetails> findByUserDetails(UserDetails userDetails);
+	List<OfferingDetails> findByUserDetailsAndWeek(UserDetails userDetails, Week week);
+	List<OfferingDetails> findByOfferingAndWeek(Offering offering, Week day);
 	void saveManyOfferginDetails(Week week, List<OfferingDetailsOfferingDTO> offeringDetailsOfferingList);
-	
-//	List<OfferingDetails> getOfferingDetailByUserOfferingDay(Offering offering, Days day, UserDetails userDetail);
 }

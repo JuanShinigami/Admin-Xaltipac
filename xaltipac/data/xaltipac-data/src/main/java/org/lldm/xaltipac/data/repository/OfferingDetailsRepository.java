@@ -11,11 +11,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 public interface OfferingDetailsRepository extends PagingAndSortingRepository<OfferingDetails, Integer>{
-	public List<OfferingDetails> findByOffering(Offering offering);
-	public List<OfferingDetails> findByWeek(Week day);
-	public List<OfferingDetails> findByUserDetails(UserDetails userDetails);
-	public List<OfferingDetails> findByUserDetailsAndWeek(UserDetails userDetails, Week week);
-	public List<OfferingDetails> findByOfferingAndWeek(Offering offering, Week day);
+	List<OfferingDetails> findByOffering(Offering offering);
+	List<OfferingDetails> findByWeek(Week day);
+	List<OfferingDetails> findByUserDetails(UserDetails userDetails);
+	List<OfferingDetails> findByUserDetailsAndWeek(UserDetails userDetails, Week week);
+	List<OfferingDetails> findByOfferingAndWeek(Offering offering, Week day);
 	
 //	@Query("FROM OfferingDetails of WHERE of.offering = :offering AND of.day = :day AND of.userDetail = :userDetail")
 //	List<OfferingDetails> getOfferingDetailByUserOfferingDay(@Param("offering")Offering offering, @Param("day")Days day, @Param("userDetail")UserDetails userDetail);
